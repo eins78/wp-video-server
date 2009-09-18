@@ -388,8 +388,8 @@ function video_embed_flash($format, $guid, $width, $height, $no_js = false) {
 		
 	} else {
 		
-		$src = "http://" . MY_VIDEO_SERVER . "/wp-content/plugins/video/flvplayer.swf?guid=$guid" . "&video_info_path=http://" . MY_VIDEO_SERVER . "/wp-content/plugins/video/video-xml.php";
-		$express_install = "http://" . MY_VIDEO_SERVER . '/wp-content/plugins/video/expressInstall2.swf'; 
+		$src = MY_VIDEO_SERVER . "/wp-content/plugins/video/flvplayer.swf?guid=$guid" . "&video_info_path=" . MY_VIDEO_SERVER . "/wp-content/plugins/video/video-xml.php";
+		$express_install = MY_VIDEO_SERVER . '/wp-content/plugins/video/expressInstall2.swf'; 
 	}
 
 	$results .= "<ins style='text-decoration:none;'>\n"; 
@@ -1170,7 +1170,7 @@ function one_video_mrss( $blog_id, $guid ){
 	if ( defined('IS_WPCOM') && IS_WPCOM ) {
 		$player = "http://v.wordpress.com/$guid"; 
 	} else {
-		$player = "http://" . MY_VIDEO_SERVER . "/wp-content/plugins/video/flvplayer.swf?guid=$guid" . "&video_info_path=http://" . MY_VIDEO_SERVER . "/wp-content/plugins/video/video-xml.php";
+		$player = MY_VIDEO_SERVER . "/wp-content/plugins/video/flvplayer.swf?guid=$guid" . "&video_info_path=" . MY_VIDEO_SERVER . "/wp-content/plugins/video/video-xml.php";
 	}
 	
 	$aux['player']['attr']['url'] = $player; 

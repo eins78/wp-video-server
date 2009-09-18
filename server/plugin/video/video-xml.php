@@ -78,8 +78,7 @@ $rand = mt_rand( 1000000000001, 9999999999998 );
 $xml = ''; 
 $xml .= "<xml>\n";
 $xml .= "<video>\n";
-
-$xml .="<video_id>$guid</video_id>\n"; 
+$xml .= "<video_id>$guid</video_id>\n"; 
 $xml .= "<caption>$caption</caption>\n";
 
 $xml .= "<duration>$total_seconds</duration>\n"; 
@@ -94,7 +93,7 @@ $xml .= "<status_interval>15</status_interval>\n";
 if ( defined('IS_WPCOM') && IS_WPCOM ) {
 	$admin_upload_url  = 'http://v.wordpress.com/wp-content/plugins/video/video-update-thumbnail.php'; 
 } else {
-	$admin_upload_url  = 'http://' .  MY_VIDEO_SERVER . '/wp-content/plugins/video/video-update-thumbnail.php'; 
+	$admin_upload_url  =  MY_VIDEO_SERVER . '/wp-content/plugins/video/video-update-thumbnail.php'; 
 }
 
 $xml .= "<admin_upload_url>$admin_upload_url</admin_upload_url>\n"; 
@@ -199,7 +198,7 @@ foreach ( $types as $type ){
 		$stats_url = "http://stats.wordpress.com/g.gif?v=wpcomv&amp;blog=$blog_id&amp;post=$post_id&amp;video_fmt=$type&amp;sid=0";
 	} else { 
 		//open source framework, also make sure you have beacon image g.gif on your stats server
-		$stats_url = 'http://' . MY_VIDEO_STATS_SERVER .  "/g.gif?v=" . MY_VIDEO_SERVER .  "&amp;blog=$blog_id&amp;post=$post_id&amp;video_fmt=$type";
+		$stats_url = MY_VIDEO_STATS_SERVER .  "/g.gif?v=" . MY_VIDEO_SERVER .  "&amp;blog=$blog_id&amp;post=$post_id&amp;video_fmt=$type";
 	}
 	$xml .= "<status_url>$stats_url</status_url>\n"; 
 	
@@ -256,7 +255,7 @@ if ( $info->display_embed == 1 ) {
 	if ( defined('IS_WPCOM') && IS_WPCOM ) {
 		$src = "http://v.wordpress.com/$guid"; 
 	} else { 
-		$src = "http://" . MY_VIDEO_SERVER . "/wp-content/plugins/video/flvplayer.swf?guid=$guid" . "&video_info_path=http://" . MY_VIDEO_SERVER . "/wp-content/plugins/video/video-xml.php";
+		$src = MY_VIDEO_SERVER . "/wp-content/plugins/video/flvplayer.swf?guid=$guid" . "&video_info_path=" . MY_VIDEO_SERVER . "/wp-content/plugins/video/video-xml.php";
 	}
 
 	$xml .= "<embed_code><![CDATA[<embed src=\"$src\" type=\"application/x-shockwave-flash\" width=\"400\" height=\"$embed_height\" allowscriptaccess=\"always\" allowfullscreen=\"true\"></embed>]]></embed_code>\n"; 
@@ -342,8 +341,3 @@ function is_valid_url( $url ) {
 } 
 
 ?>
-
-
-
-
-

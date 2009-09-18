@@ -9,10 +9,7 @@
  * Version: 1.0
  */
 
-define( 'FFMPEG_BINARY', '/usr/bin/ffmpeg' );
-define( 'FASTSTART', '/usr/bin/qt-faststart' );
 define( 'VIDEO_MAX_PASS_NUMBER', 3 ); 
-define( 'FFMPEG2THEORY_BINARY', '/usr/local/bin/ffmpeg2theora' ); 
 
 /**
  * Given a guid, returns the video image url
@@ -60,17 +57,11 @@ function video_image_url_by_guid( $guid, $type='thumbnail', $format='fmt_std' ) 
  * If none is alive, return ''
  */
 function pick_fileserver( $dc = 'luv') {
-	
-	//return 'http://' . MY_VIDEO_FILE_SERVER; //if your site has a dedicated file server
-
-	$fileserver = get_option('siteurl');
-	return $fileserver;
+	return MY_VIDEO_FILE_SERVER;
 }
 
 function pick_transcoder() {
-	
-	return 'http://' . MY_VIDEO_TRANSCODER . '/wp-content/plugins/video/video-transcoder.php'; 
-	
+	return MY_VIDEO_TRANSCODER . '/wp-content/plugins/video/video-transcoder.php';	
 } 
 
 /**
@@ -169,8 +160,8 @@ function remote_transcode_one_video( $post_id ) {
 		// testing, direct call
 		/*$job = new stdClass(); 
 		$job->data = $data; 
-		transcode_video( $job );
-		*/
+		transcode_video( $job ); */
+		
 		
 	} else { // open source framework 
 
@@ -182,9 +173,10 @@ function remote_transcode_one_video( $post_id ) {
 		}
 	
 		// fork a background child process to handle the request
-		$php_exe = "/usr/local/bin/php  " ; 
-		$cmd = $php_exe . ABSPATH . "wp-content/plugins/video/video-upload.php $video_url $blog_id $post_id $dc $transcoder > /dev/null 2>&1 &"; 
-		error_log("cmd=$cmd"); 
+		$cmd = PHP_EXE . ' ' .  ABSPATH . "wp-content/plugins/video/video-upload.php $video_url $blog_id $post_id $dc $transcoder > /dev/null 2>&1 &"; 
+		
+		if ( defined('VIDEO_DEBUG') && VIDEO_DEBUG ) 
+			error_log("cmd=$cmd"); 
 	
 		exec($cmd); 
 	}
@@ -770,7 +762,9 @@ function transcode_and_send( $format, $job, $para_array ){
 	$cmd .= $temp_video_file; 
 	
 	exec( $cmd, $lines, $r ); 
-	//error_log( "cmd = $cmd "); 
+	
+	if ( defined('VIDEO_DEBUG') && VIDEO_DEBUG ) 
+		error_log( "cmd = $cmd "); 
 
 	if ( $r !== 0 && $r != 1 ){
 		$status = 'error_ffmpeg_binary_transcode'; 
@@ -935,7 +929,9 @@ function ogg_transcode_and_send( $format, $job, $para_array ){
 	 }
 	
 	exec( $cmd, $lines, $r ); 
-	//error_log( "cmd = $cmd "); 
+	
+	if ( defined('VIDEO_DEBUG') && VIDEO_DEBUG ) 
+		error_log( "cmd = $cmd "); 
 
 	if ( $r !== 0 && $r != 1 ){
 		$status = 'error_ffmpeg2theora_binary_transcode'; 
@@ -1065,7 +1061,9 @@ function send_to_fileserver( $dc, $format, $para_array ) {
 	$domain = $wpdb->get_var( $wpdb->prepare(" SELECT domain FROM wp_blogs where blog_id = %d", $blog_id) );
 	
 	$final_touch .= "?blog=$domain&amp;post_id=$post_id"; 
-	//error_log("final_touch=$final_touch");
+
+	if ( defined('VIDEO_DEBUG') && VIDEO_DEBUG ) 
+		error_log("final_touch=$final_touch");
 
 	$r = video_post_form( $final_touch, $form );
 
@@ -1082,7 +1080,7 @@ function send_to_fileserver( $dc, $format, $para_array ) {
 		
 	$sql = $wpdb->prepare( "SELECT * FROM videos WHERE blog_id=%d AND post_id=%d", $blog_id, $post_id); 
 	$info = $wpdb->get_row( $sql );
-	
+
 	if ( video_format_done( $info, $format ) )
 		return true;
 	else { 
